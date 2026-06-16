@@ -49,7 +49,7 @@ async function getActress(id: number): Promise<Actress | null> {
     }
     const dati: unknown = await response.json()
     if (isActress(dati)) {
-      return dati as Actress;
+      return dati as Actress;   // stiamo dicendo a typescript che siamo sicuri che "dati",quindi il risultato del fetch, è di tipo Actress
     }
     throw new Error('Formato dei dati non valido')
   } catch (errore) {
@@ -70,7 +70,25 @@ Può essere anche un array vuoto.
 
 */
 
+async function getAllActresses(): Promise<Actress[]> {
+  try {
+    const response = await fetch(`${API_URL}/actresses`);
+    if (!response.ok) {  //controllo che la response sia ok 
+      throw new Error(`Errore HTTP ${response.status} : ${response.statusText}`)  //se non è ok creo l'errore 
+    }
+    const dati: unknown = await response.json()
+    if (!(dati instanceof Array)) {
+      throw new Error(`Formato dei dati non valido: non è un array`)
+    }
+    const attriciValide = dati.filter(a => isActress(a))
+    return attriciValide;
 
+
+  } catch (errore) {
+    console.log(errore)
+  }
+  return [];
+}
 
 
 
