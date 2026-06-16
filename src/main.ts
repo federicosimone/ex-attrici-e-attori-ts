@@ -86,8 +86,9 @@ async function getAllActresses(): Promise<Actress[]> {
 
   } catch (errore) {
     console.log(errore)
+    return [];
   }
-  return [];
+
 }
 
 
@@ -103,3 +104,22 @@ L'obiettivo è ottenere una lista di risultati in parallelo, quindi dovrai usare
 La funzione deve restituire un array contenente elementi di tipo Actress oppure null (se l’attrice non è stata trovata).
 
 */
+
+async function getActresses(ids: number[]): Promise<(Actress | null)[]> {
+
+  try {
+    const promises = ids.map(id => getActress(id))
+    const actresses = await Promise.all(promises);
+    return actresses;
+  } catch (errore) {
+    if (errore instanceof Error) {
+      console.error('Errore durante il recupero dei dati', errore)
+    } else {
+      console.error(errore)
+    }
+    return [];
+  }
+
+
+
+}
