@@ -1,4 +1,5 @@
 import type { Person } from "./typeAlias";
+import type { Actress } from "./typeAlias";
 
 
 const API_URL = "http://localhost:3333"
@@ -12,20 +13,18 @@ Utilizza un type guard chiamato isActress per assicurarti che la struttura del d
 
 */
 
-function isActress(dati: unknown): dati is Actress {
-
-
-  if (
-    dati &&
-    typeof dati === "object" &&
-    "id" in dati &&
-    typeof dati.id === "number" &&
+function isActress(dati: unknown): dati is Actress {    // is fa capire che sto creando un type guard 
+  return (
+    typeof dati === "object" &&  //controllo se dati è un oggetto
+    dati !== null &&    // controllo se è diverso da null (perchè null restituisce oggetto)
+    "id" in dati &&  // controllo che i dati contengano un "id"
+    typeof dati.id === "number" &&  // e poi controllo che l'id di dati (dati.id) rispetti il typo che gli ho determinato ("number")
     "name" in dati &&
     typeof dati.name === "string" &&
     "birth_year" in dati &&
     typeof dati.birth_year === "number" &&
-    (!("death_year" in dati) ||
-      typeof dati.death_year === "number") &&
+    "death_year" in dati &&
+    typeof dati.death_year === "number" &&
     "biography" in dati &&
     typeof dati.biography === "string" &&
     "image" in dati &&
@@ -33,16 +32,12 @@ function isActress(dati: unknown): dati is Actress {
     "most_famous_movies" in dati &&
     Array.isArray(dati.most_famous_movies) &&
     dati.most_famous_movies.length === 3 &&
+    dati.most_famous_movies.every(m => typeof m === "string") &&
     "awards" in dati &&
     typeof dati.awards === "string" &&
     "nationality" in dati &&
     typeof dati.nationality === "string"
-  ) {
-    return true;
-
-  }
-
-  return false;
+  )
 }
 
 
